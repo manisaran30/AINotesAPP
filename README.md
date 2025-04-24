@@ -1,7 +1,7 @@
 ```markdown
 # ✨ AI Notes App
 
-A powerful **AI-assisted note-taking web app** that helps users write, manage, and summarize their notes using AI! Built with **React (Vite)**, **TypeScript**, **Tailwind CSS**, and powered by **Supabase** for authentication and database management.
+A powerful AI-assisted note-taking web app that helps users write, manage, and summarize their notes using AI! Built with React (Vite), TypeScript, Tailwind CSS, and powered by Supabase for authentication and database management.
 
 ## 🌟 Features
 
@@ -28,11 +28,11 @@ A powerful **AI-assisted note-taking web app** that helps users write, manage, a
 
 ## 🛠 Tech Stack
 
-- **Frontend**: React, TypeScript, Vite
-- **Backend**: Supabase (Auth + Postgres)
-- **Styling**: Tailwind CSS
-- **AI**: Groq / Llama3 via API
-- **Deployment**: Vercel
+- Frontend: React, TypeScript, Vite
+- Backend: Supabase (Auth + Postgres)
+- Styling: Tailwind CSS
+- AI: Groq / Llama3 via API
+- Deployment: Vercel
 
 ---
 
