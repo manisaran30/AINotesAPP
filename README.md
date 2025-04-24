@@ -1,7 +1,3 @@
-Here’s a `README.md` file you can add to your [AINotesAPP GitHub repository](https://github.com/manisaran30/AINotesAPP):
-
----
-
 ```markdown
 # ✨ AI Notes App
 
@@ -19,7 +15,7 @@ A powerful **AI-assisted note-taking web app** that helps users write, manage, a
 
 ## 🚀 Live Demo
 
-👉 [Visit the live app](https://ainotesapp.vercel.app)
+👉 [Visit the live app](https://ai-notes-app-eosin.vercel.app/)
 
 ---
 
