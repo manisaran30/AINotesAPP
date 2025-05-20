@@ -15,7 +15,7 @@ A powerful AI-assisted note-taking web app that helps users write, manage, and s
 
 ## 🚀 Live Demo
 
-👉 [Visit the live app](https://ai-notes-app-eosin.vercel.app/)
+👉 [Visit the live app](https://ai-notes-app-kohl.vercel.app/)
 
 ---
 
