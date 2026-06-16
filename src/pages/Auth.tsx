@@ -93,9 +93,9 @@ export function Auth() {
               type="submit"
               className="w-full"
               size="lg"
-              disabled={loading}
+              loading={loading}
             >
-              {loading ? 'Processing...' : isSignUp ? 'Create Account' : 'Sign In'}
+              {isSignUp ? 'Create Account' : 'Sign In'}
             </Button>
           </form>
 
