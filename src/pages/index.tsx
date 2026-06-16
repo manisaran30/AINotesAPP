@@ -2,158 +2,105 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/Button';
-import { NotebookPen, Sparkles, BrainCircuit, Shield } from 'lucide-react';
+import { Sparkles, FileText, Shield, ArrowRight } from 'lucide-react';
 
 export function Index() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white">
-      <header className="container mx-auto py-6 px-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <NotebookPen className="h-6 w-6 text-primary" />
-          <span className="font-bold text-xl">AI Notes</span>
-        </div>
-        <div>
-          {user ? (
-            <Button onClick={() => navigate('/notes')}>Go to Notes</Button>
-          ) : (
-            <Button onClick={() => navigate('/auth')}>Sign In</Button>
-          )}
+    <div className="min-h-screen bg-background">
+      <header className="border-b border-border">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+              <Sparkles className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <span className="font-semibold text-base">AI Notes</span>
+          </div>
+          <div>
+            {user ? (
+              <Button onClick={() => navigate('/notes')} size="sm">
+                Go to Notes
+              </Button>
+            ) : (
+              <Button onClick={() => navigate('/auth')} size="sm">
+                Sign In
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-emerald-600">
-              Smarter Notes with AI
-            </h1>
-            <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Capture your thoughts and let AI organize them. Never lose track of important ideas again.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {user ? (
-                <Button
-                  size="lg"
-                  onClick={() => navigate('/notes')}
-                  className="group"
-                >
-                  <span>Go to My Notes</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 7l5 5m0 0l-5 5m5-5H6"
-                    />
-                  </svg>
-                </Button>
-              ) : (
-                <>
-                  <Button
-                    size="lg"
-                    onClick={() => navigate('/auth')}
-                    className="group"
-                  >
-                    <span>Get Started</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                      />
-                    </svg>
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    onClick={() => window.open('https://github.com/yourusername/ai-notes-app', '_blank')}
-                  >
-                    Learn More
-                  </Button>
-                </>
-              )}
-            </div>
+      <section className="max-w-6xl mx-auto px-6 pt-24 pb-16">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-6">
+            <Sparkles className="h-3.5 w-3.5" />
+            Powered by AI
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-            <FeatureCard
-              icon={<Sparkles className="h-10 w-10 text-amber-500" />}
-              title="AI Summaries"
-              description="Automatically generate concise summaries of your notes using advanced AI technology."
-            />
-            <FeatureCard
-              icon={<BrainCircuit className="h-10 w-10 text-primary" />}
-              title="Smart Organization"
-              description="Focus on writing while AI helps you organize and connect your ideas."
-            />
-            <FeatureCard
-              icon={<Shield className="h-10 w-10 text-emerald-600" />}
-              title="Private & Secure"
-              description="Your notes are encrypted and only accessible by you."
-            />
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-4xl mx-auto">
-            <div className="p-8 md:p-12">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-                Start taking smarter notes today
-              </h2>
-              <p className="text-gray-600 text-center mb-8">
-                Join thousands of people who use AI Notes to capture and organize their ideas.
-              </p>
-              {!user && (
-                <div className="flex justify-center">
-                  <Button
-                    size="lg"
-                    onClick={() => navigate('/auth')}
-                    className="group"
-                  >
-                    <span>Create Your Free Account</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                      />
-                    </svg>
-                  </Button>
-                </div>
-              )}
-            </div>
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-balance">
+            Smarter notes with
+            <span className="text-primary"> AI</span>
+          </h1>
+          <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto text-balance">
+            Capture your thoughts and let AI organize them. Create, summarize, and search your notes with the power of artificial intelligence.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            {user ? (
+              <Button size="lg" onClick={() => navigate('/notes')}>
+                Go to My Notes
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            ) : (
+              <Button size="lg" onClick={() => navigate('/auth')}>
+                Get Started Free
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            )}
           </div>
         </div>
-      </main>
+      </section>
 
-      <footer className="bg-gray-50 py-12 mt-20">
-        <div className="container mx-auto px-4 text-center text-gray-500">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <NotebookPen className="h-5 w-5 text-primary" />
-            <span className="font-bold">AI Notes</span>
+      <section className="max-w-6xl mx-auto px-6 pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <FeatureCard
+            icon={<FileText className="h-5 w-5" />}
+            title="Smart Notes"
+            description="Write naturally while AI helps you organize and structure your thoughts."
+          />
+          <FeatureCard
+            icon={<Sparkles className="h-5 w-5" />}
+            title="AI Summaries"
+            description="Generate concise summaries of your notes with a single click."
+          />
+          <FeatureCard
+            icon={<Shield className="h-5 w-5" />}
+            title="Private & Secure"
+            description="Your notes are encrypted and only accessible by you."
+          />
+        </div>
+      </section>
+
+      <section className="border-t border-border">
+        <div className="max-w-6xl mx-auto px-6 py-16 text-center">
+          <h2 className="text-2xl font-semibold mb-3">Start taking smarter notes today</h2>
+          <p className="text-muted-foreground mb-8">Join people who use AI to capture and organize their ideas.</p>
+          {!user && (
+            <Button size="lg" onClick={() => navigate('/auth')}>
+              Create Your Free Account
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
+          )}
+        </div>
+      </section>
+
+      <footer className="border-t border-border">
+        <div className="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span className="font-medium text-foreground">AI Notes</span>
           </div>
-          <p>© 2025 AI Notes. All rights reserved.</p>
+          <p>&copy; 2025 AI Notes. All rights reserved.</p>
         </div>
       </footer>
     </div>
@@ -162,10 +109,12 @@ export function Index() {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-      <div className="mb-4">{icon}</div>
-      <h3 className="text-xl font-semibold mb-2">{title}</h3>
-      <p className="text-gray-600">{description}</p>
+    <div className="rounded-xl border bg-card p-6 transition-all duration-150 hover:border-foreground/20">
+      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+        {icon}
+      </div>
+      <h3 className="font-semibold mb-1.5">{title}</h3>
+      <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
     </div>
   );
 }

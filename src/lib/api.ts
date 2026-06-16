@@ -76,6 +76,7 @@ export async function deleteNote(id: string) {
 export async function summarizeNote(content: string) {
   try {
     const apiKey = import.meta.env.VITE_AI_API_KEY;
+    const model = import.meta.env.VITE_AI_MODEL || 'llama-3.3-70b-versatile';
 
     if (!apiKey) {
       throw new Error('API key not found. Please set VITE_AI_API_KEY in your environment variables.');
@@ -88,7 +89,7 @@ export async function summarizeNote(content: string) {
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'llama3-70b-8192',
+        model,
         messages: [
           {
             role: 'system',

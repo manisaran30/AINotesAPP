@@ -32,24 +32,29 @@ function App() {
         </Routes>
       </Router>
       <Toaster
-        position="top-right"
+        position="top-center"
         toastOptions={{
           duration: 3000,
           style: {
-            background: '#363636',
-            color: '#fff',
+            borderRadius: '12px',
+            background: '#18181B',
+            color: '#FAFAFA',
+            fontSize: '14px',
+            padding: '12px 16px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
           },
           success: {
-            duration: 3000,
-            style: {
-              background: '#059669',
+            iconTheme: {
+              primary: '#22C55E',
+              secondary: '#FAFAFA',
             },
           },
           error: {
-            duration: 4000,
-            style: {
-              background: '#DC2626',
+            iconTheme: {
+              primary: '#EF4444',
+              secondary: '#FAFAFA',
             },
+            duration: 4000,
           },
         }}
       />

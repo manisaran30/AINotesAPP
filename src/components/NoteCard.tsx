@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/Button';
 import { type Note } from '../lib/types';
-import { Edit, Trash2, FileDown } from 'lucide-react';
+import { Edit, Trash2, Sparkles, FileText } from 'lucide-react';
 import { truncate } from '../lib/utils';
 
 interface NoteCardProps {
@@ -13,45 +12,54 @@ interface NoteCardProps {
 }
 
 export function NoteCard({ note, onEdit, onDelete }: NoteCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <Card className="h-full flex flex-col transition-all hover:shadow-md">
-      <CardHeader className="pb-2">
-        <CardTitle className="line-clamp-1">{note.title}</CardTitle>
-        <p className="text-xs text-muted-foreground">
-          {format(new Date(note.updated_at), 'MMM d, yyyy')}
-        </p>
-      </CardHeader>
-      <CardContent className="flex-grow">
-        <div className="space-y-2">
-          <p className="text-sm line-clamp-3">{truncate(note.content, 150)}</p>
+    <div
+      className="group relative rounded-xl border bg-card p-5 cursor-pointer transition-all duration-200 hover:border-foreground/20 hover:shadow-card-hover"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => onEdit(note)}
+    >
+      <div className="flex items-start gap-3">
+        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+          <FileText className="h-4 w-4 text-primary" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-sm truncate mb-1">{note.title}</h3>
+          <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+            {truncate(note.content, 120)}
+          </p>
           {note.summary && (
-            <div className="mt-4 p-3 bg-secondary/20 rounded-md">
-              <p className="text-xs font-medium text-secondary-foreground">AI Summary</p>
-              <p className="text-sm">{note.summary}</p>
+            <div className="mt-2.5 flex items-start gap-1.5 text-xs text-primary">
+              <Sparkles className="h-3 w-3 shrink-0 mt-0.5" />
+              <span className="line-clamp-1">{note.summary}</span>
             </div>
           )}
         </div>
-      </CardContent>
-      <CardFooter className="pt-2 flex justify-between border-t">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => onEdit(note)}
-          className="flex items-center gap-1"
-        >
-          <Edit className="h-4 w-4" />
-          <span className="sr-only sm:not-sr-only sm:ml-1">Edit</span>
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={() => onDelete(note.id)}
-          className="flex items-center gap-1 text-destructive hover:text-destructive"
-        >
-          <Trash2 className="h-4 w-4" />
-          <span className="sr-only sm:not-sr-only sm:ml-1">Delete</span>
-        </Button>
-      </CardFooter>
-    </Card>
+      </div>
+
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-border">
+        <span className="text-[11px] text-muted-foreground">
+          {format(new Date(note.updated_at), 'MMM d, yyyy')}
+        </span>
+        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+          <button
+            onClick={(e) => { e.stopPropagation(); onEdit(note); }}
+            className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            title="Edit"
+          >
+            <Edit className="h-3.5 w-3.5" />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onDelete(note.id); }}
+            className="h-7 w-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+            title="Delete"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }

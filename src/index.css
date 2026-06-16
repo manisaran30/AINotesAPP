@@ -1,3 +1,111 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 97%;
+    --foreground: 240 10% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 4%;
+    --primary: 252 78% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-muted: 252 78% 95%;
+    --secondary: 240 5% 90%;
+    --secondary-foreground: 240 10% 4%;
+    --muted: 240 5% 92%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 252 78% 95%;
+    --accent-foreground: 252 60% 50%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --destructive-muted: 0 72% 95%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 252 78% 60%;
+    --radius: 0.5rem;
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 240 10% 4%;
+    --sidebar-muted: 240 5% 92%;
+    --sidebar-border: 240 6% 90%;
+    --ai-glow: 252 78% 60%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  ::selection {
+    @apply bg-primary/15 text-foreground;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+@keyframes animateIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-in {
+  animation: animateIn 0.3s ease forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease forwards;
+}
+
+.animate-spin-slow {
+  animation: spin 2s linear infinite;
+}

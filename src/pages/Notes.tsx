@@ -7,11 +7,12 @@ import { Sidebar } from '../components/Sidebar';
 import { Button } from '../components/ui/Button';
 import { Note } from '../lib/types';
 import { 
-  PlusCircle, 
-  RefreshCcw, 
-  X, 
+  Plus, 
+  Search,
+  X,
   Sparkles,
-  Search 
+  RefreshCcw,
+  Menu
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,6 +33,8 @@ export function Notes() {
   const [isCreating, setIsCreating] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   if (!user) {
@@ -85,167 +88,173 @@ export function Notes() {
     note.content.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const renderContent = () => {
-    if (isLoading) {
-      return (
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading your notes...</p>
-          </div>
+  if (editingNote || isCreating) {
+    return (
+      <div className="h-screen flex bg-background">
+        <div className={`${sidebarCollapsed ? 'w-16' : 'w-56'} shrink-0 hidden md:block`}>
+          <Sidebar
+            onNewNote={() => setIsCreating(true)}
+            collapsed={sidebarCollapsed}
+            onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+          />
         </div>
-      );
-    }
-
-    if (isError) {
-      return (
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center p-6 bg-destructive/10 rounded-lg">
-            <p className="text-destructive mb-4">Error loading notes</p>
-            <p className="text-sm text-muted-foreground mb-4">
-              {error instanceof Error ? error.message : 'Unknown error occurred'}
-            </p>
-            <Button onClick={() => refetch()} className="flex items-center gap-1">
-              <RefreshCcw className="h-4 w-4" />
-              <span>Try Again</span>
-            </Button>
-          </div>
-        </div>
-      );
-    }
-
-    if (editingNote) {
-      return (
-        <div className="max-w-3xl mx-auto p-4">
-          <NoteEditor 
-            note={editingNote} 
-            onSave={handleUpdateNote} 
-            onCancel={() => setEditingNote(null)}
+        <div className="flex-1 flex flex-col min-w-0">
+          <NoteEditor
+            note={editingNote || undefined}
+            onSave={editingNote ? handleUpdateNote : handleCreateNote}
+            onCancel={() => { setEditingNote(null); setIsCreating(false); }}
             onSummarize={handleSummarizeNote}
             isSummarizing={isSummarizing}
           />
         </div>
-      );
-    }
-
-    if (isCreating) {
-      return (
-        <div className="max-w-3xl mx-auto p-4">
-          <NoteEditor 
-            onSave={handleCreateNote} 
-            onCancel={() => setIsCreating(false)} 
-          />
-        </div>
-      );
-    }
-
-    if (filteredNotes.length === 0) {
-      if (searchQuery) {
-        return (
-          <div className="flex flex-col items-center justify-center h-64">
-            <Search className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold">No matching notes found</h3>
-            <p className="text-muted-foreground">
-              Try a different search term or clear your search
-            </p>
-            <Button 
-              variant="outline" 
-              className="mt-4"
-              onClick={() => setSearchQuery('')}
-            >
-              Clear Search
-            </Button>
-          </div>
-        );
-      }
-      
-      return (
-        <div className="flex flex-col items-center justify-center h-64">
-          <NotesEmptyState onCreateNote={() => setIsCreating(true)} />
-        </div>
-      );
-    }
-
-    return (
-      <>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-          {filteredNotes.map(note => (
-            <NoteCard
-              key={note.id}
-              note={note}
-              onEdit={(note) => setEditingNote(note)}
-              onDelete={handleDeleteNote}
-            />
-          ))}
-        </div>
-      </>
+      </div>
     );
-  };
+  }
 
   return (
-    <div className="h-screen flex flex-col md:flex-row bg-background">
-      <div className="w-full md:w-64 flex-shrink-0 md:h-screen">
-        <Sidebar onNewNote={() => setIsCreating(true)} />
+    <div className="h-screen flex bg-background">
+      <div className={`${sidebarCollapsed ? 'w-16' : 'w-56'} shrink-0 hidden md:block`}>
+        <Sidebar
+          onNewNote={() => setIsCreating(true)}
+          collapsed={sidebarCollapsed}
+          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
       </div>
-      
-      <div className="flex-1 flex flex-col h-full overflow-hidden">
-        <header className="p-4 border-b flex justify-between items-center bg-background sticky top-0 z-10">
+
+      {mobileSidebarOpen && (
+        <div className="fixed inset-0 z-40 md:hidden">
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setMobileSidebarOpen(false)}
+          />
+          <div className="fixed inset-y-0 left-0 w-56 animate-in">
+            <Sidebar onNewNote={() => { setIsCreating(true); setMobileSidebarOpen(false); }} />
+          </div>
+        </div>
+      )}
+
+      <div className="flex-1 flex flex-col min-w-0">
+        <header className="h-14 border-b border-border flex items-center gap-3 px-4 shrink-0 bg-background">
+          <button
+            onClick={() => setMobileSidebarOpen(true)}
+            className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors md:hidden"
+            aria-label="Open menu"
+          >
+            <Menu className="h-4 w-4" />
+          </button>
           <div className="flex-1 max-w-md">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
+                <Search className="h-4 w-4" />
+              </div>
               <input
                 type="text"
                 placeholder="Search notes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-md bg-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                className="flex h-9 w-full rounded-lg border border-input bg-background pl-10 pr-8 py-2 text-sm placeholder:text-muted-foreground/60 transition-colors duration-150 hover:border-foreground/20 focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
               )}
             </div>
           </div>
-          
-          <div className="ml-4 flex items-center">
-            {!isCreating && !editingNote && (
-              <Button 
-                onClick={() => setIsCreating(true)}
-                className="flex items-center gap-1"
-              >
-                <PlusCircle className="h-4 w-4" />
-                <span className="hidden sm:inline">New Note</span>
-              </Button>
-            )}
-          </div>
+          <Button onClick={() => setIsCreating(true)} size="sm">
+            <Plus className="h-4 w-4 mr-1.5" />
+            <span className="hidden sm:inline">New Note</span>
+          </Button>
         </header>
-        
-        <main className="flex-1 overflow-auto bg-background">
-          {renderContent()}
+
+        <main className="flex-1 overflow-y-auto">
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <NoteCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : isError ? (
+            <div className="flex items-center justify-center h-full p-8">
+              <div className="text-center max-w-sm">
+                <div className="h-16 w-16 rounded-2xl bg-destructive-muted flex items-center justify-center mx-auto mb-5">
+                  <X className="h-7 w-7 text-destructive" />
+                </div>
+                <h2 className="text-lg font-semibold mb-2">Failed to load notes</h2>
+                <p className="text-sm text-muted-foreground mb-6">
+                  {error instanceof Error ? error.message : 'An unexpected error occurred'}
+                </p>
+                <Button onClick={() => refetch()}>
+                  <RefreshCcw className="h-4 w-4 mr-1.5" />
+                  Try Again
+                </Button>
+              </div>
+            </div>
+          ) : filteredNotes.length === 0 ? (
+            searchQuery ? (
+              <div className="flex items-center justify-center h-full p-8">
+                <div className="text-center max-w-sm">
+                  <div className="h-16 w-16 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-5">
+                    <Search className="h-7 w-7 text-muted-foreground" />
+                  </div>
+                  <h2 className="text-lg font-semibold mb-2">No matching notes</h2>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    Try a different search term or clear your search.
+                  </p>
+                  <Button variant="outline" onClick={() => setSearchQuery('')}>
+                    <X className="h-4 w-4 mr-1.5" />
+                    Clear Search
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-full p-8">
+                <div className="text-center max-w-sm">
+                  <div className="h-16 w-16 rounded-2xl bg-primary-muted flex items-center justify-center mx-auto mb-5">
+                    <Sparkles className="h-7 w-7 text-primary" />
+                  </div>
+                  <h2 className="text-lg font-semibold mb-2">Create your first note</h2>
+                  <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                    Start capturing your ideas and let AI help you organize them.
+                  </p>
+                  <Button onClick={() => setIsCreating(true)}>
+                    <Plus className="h-4 w-4 mr-1.5" />
+                    Create Note
+                  </Button>
+                </div>
+              </div>
+            )
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+              {filteredNotes.map(note => (
+                <NoteCard
+                  key={note.id}
+                  note={note}
+                  onEdit={(note) => setEditingNote(note)}
+                  onDelete={handleDeleteNote}
+                />
+              ))}
+            </div>
+          )}
         </main>
       </div>
     </div>
   );
 }
 
-function NotesEmptyState({ onCreateNote }: { onCreateNote: () => void }) {
+function NoteCardSkeleton() {
   return (
-    <div className="text-center p-6 max-w-md mx-auto">
-      <div className="bg-primary/10 p-6 rounded-full inline-flex items-center justify-center mb-6">
-        <Sparkles className="h-10 w-10 text-primary" />
+    <div className="rounded-xl border bg-card p-5 space-y-3 animate-pulse">
+      <div className="h-5 w-2/3 bg-muted rounded-md" />
+      <div className="h-4 w-full bg-muted rounded-md" />
+      <div className="h-4 w-3/4 bg-muted rounded-md" />
+      <div className="pt-2 flex items-center justify-between">
+        <div className="h-3 w-20 bg-muted rounded-md" />
+        <div className="h-8 w-16 bg-muted rounded-md" />
       </div>
-      <h3 className="text-xl font-semibold mb-2">Create your first note</h3>
-      <p className="text-muted-foreground mb-6">
-        Start capturing your ideas and let AI help you organize them
-      </p>
-      <Button onClick={onCreateNote} className="flex items-center gap-1 mx-auto">
-        <PlusCircle className="h-4 w-4" />
-        <span>Create Note</span>
-      </Button>
     </div>
   );
 }
