@@ -23,6 +23,10 @@ export function useAuth(): UseAuthReturn {
   useEffect(() => {
     let cancelled = false;
 
+    const fallback = setTimeout(() => {
+      if (!cancelled) setLoading(false);
+    }, 5000);
+
     const init = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
@@ -32,6 +36,7 @@ export function useAuth(): UseAuthReturn {
       } catch (err) {
         console.error('Auth init error:', err);
       } finally {
+        clearTimeout(fallback);
         if (!cancelled) setLoading(false);
       }
     };
@@ -40,6 +45,7 @@ export function useAuth(): UseAuthReturn {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (cancelled) return;
+      clearTimeout(fallback);
       setSession(session);
       setUser(session?.user ?? null);
       if (loading) setLoading(false);
@@ -47,6 +53,7 @@ export function useAuth(): UseAuthReturn {
 
     return () => {
       cancelled = true;
+      clearTimeout(fallback);
       subscription.unsubscribe();
     };
   }, []);
